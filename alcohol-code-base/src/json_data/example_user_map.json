@@ -1,0 +1,17 @@
+{
+  "id_to_username": {
+    "12345": "testuser1_updated"
+  },
+  "username_to_id": {
+    "testuser1_updated": "12345"
+  }
+}
+
+//{
+//  "id_to_username": {
+//    "telegramID": "telegramName"
+//  },
+//  "username_to_id": {
+//    "telegramName": "telegramID"
+//  }
+//}
