@@ -10,8 +10,11 @@ from aiogram.enums import ParseMode
 
 settings = get_settings()
 
+if settings.development.development_mode:
+    TOKEN = settings.telegram.bot_token_test  # Получаем токен бота из настроек
+else:
+    TOKEN = settings.telegram.bot_token  # Получаем токен бота из настроек
 
-TOKEN = settings.telegram.bot_token  # Получаем токен бота из настроек
 # N8N_WEBHOOK_URL = settings.n8n.webhook_url
 # GEMINI_API_KEY = settings.gemini.api_key
 #

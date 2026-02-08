@@ -39,6 +39,9 @@ class TelegramConfig(BaseModel):
     bot_token: str = ""
     bot_username: Optional[str] = Field(None, description="Username бота")
 
+    bot_token_test: str = ""
+    bot_username_test: Optional[str] = Field(None, description="Username бота")
+
     # Webhook настройки (опционально)
     webhook_url: Optional[str] = Field(None, description="URL для webhook")
     webhook_path: str = Field("/webhook", description="Путь для webhook")
@@ -108,7 +111,7 @@ class GoogleConfig(BaseModel):
 
     @field_validator("credentials_path")
     @classmethod
-    def validate_credentials_path(cls, v: Path) -> Path:
+    def validate_credentials_path(cls, p: Path) -> Path:
         """
         Валидирует путь к файлу учетных данных Google.
 
@@ -121,6 +124,7 @@ class GoogleConfig(BaseModel):
         Raises:
             ValueError: Если файл не найден или не является файлом.
         """
+        v = Path(BASE_DIR / p)
         try:
             if not v.exists():
                 raise ValueError(f"Файл учетных данных Google не найден по пути: {v}")
@@ -130,6 +134,7 @@ class GoogleConfig(BaseModel):
             # Перехватываем возможные ошибки доступа к файловой системе
             raise ValueError(f"Ошибка при проверке пути к файлу учетных данных: {e}")
         return v
+
 
 class FilesConfig(BaseModel):
     """Конфигурация работы с файлами."""
@@ -218,6 +223,7 @@ class SecurityConfig(BaseModel):
 
         raise ValueError(f"Неподдерживаемый тип для admin_user_ids: {type(v)}")
 
+
 class ProcessingConfig(BaseModel):
     """Конфигурация обработки документов."""
 
@@ -289,6 +295,11 @@ class Settings(BaseSettings):
     # rabbitmq: RabbitMQSettings = RabbitMQSettings()
     log: LogConfig = LogConfig()
     log_dir: Path = BASE_DIR / "logs"
+
+    def __init__(self):
+        super().__init__()
+        if self.development.development_mode:
+            self.telegram.bot_username = "test" + self.telegram.bot_username
 
     def is_admin(self, user_id: int) -> bool:
         """
@@ -366,3 +377,4 @@ if __name__ == "__main__":
     settings = get_settings()
     for k,v in settings.security.model_dump().items():
         print(k,v)
+    print(settings.telegram.bot_username)
